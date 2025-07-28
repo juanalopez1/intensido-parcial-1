@@ -1,3 +1,4 @@
+import { Departamento } from "../schemas/departamento.js";
 import { LocalidadUsuario } from "../schemas/localidad.js";
 import { Usuario } from "../schemas/usuario.js"
 import { UCUNoAutorizadoError, UCUNoEncontradoError } from "../util/index.js";
@@ -37,7 +38,7 @@ class UsuarioRepository extends BaseRepository<Usuario> {
   }
 
   async create(data: Usuario): Promise<Usuario> {
-    const consulta = "INSERT INTO usuarios (nombre, roles, password_hash) VALUES ($1, $2, crypt('contraseña', gen_salt('bf'))) RETURNING *";
+    const consulta = "INSERT INTO usuarios (nombre, roles) VALUES ($1, $2) RETURNING *";
     const res = await myPool.query(consulta,[data.nombre,data.roles]);
     const id_usuario = res.rows[0].id_usuario;
     console.log({id_usuario});
@@ -68,7 +69,7 @@ class UsuarioRepository extends BaseRepository<Usuario> {
     return res.rows[0]
   }
 
-  async getDepartamentos(id_usuario : number){
+  async getDepartamentos(id_usuario : number) : Promise<Departamento[]>{
     const consulta = `
       SELECT D.* 
       FROM public.usuarios U
@@ -95,15 +96,17 @@ class UsuarioRepository extends BaseRepository<Usuario> {
   async addLocalidad (localidad : LocalidadUsuario) {
     const consulta = `
       INSERT INTO public.localidades (id_localidad, id_departamento, id_usuario, nombre)
-      VALUES ($1,$2,$3,$4)
+      VALUES ($1,$2,$3,$4) returning id_localidad
       ;
     `;
-    await myPool.query(consulta,[
+    const result = await myPool.query(consulta,[
       localidad.id_localidad,
       localidad.id_departamento,
       localidad.id_usuario,
       localidad.nombre
     ]);
+
+    return result.rows;
   }
 
   async removeLocalidad (id_usuario :number,id_departamento :number,id_localidad :number) {
