@@ -10,6 +10,7 @@
         <ion-button routerLink="/protegida">Ir a Protegida</ion-button>
         <ion-button routerLink="/protegida/usuarios">Ir a Usuarios</ion-button>
         <ion-button routerLink="/protegida/usuarios/crear">Crear Usuario</ion-button>
+        <ion-button routerLink="/protegida/cerrar" (click)="this.authService.logOut()">Cerrar sesion</ion-button>
       </ion-menu-toggle>
     </ion-content>
   </ion-menu>

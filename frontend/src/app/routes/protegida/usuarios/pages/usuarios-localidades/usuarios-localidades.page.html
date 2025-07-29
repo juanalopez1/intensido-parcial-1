@@ -1,8 +1,27 @@
 <p>
-  usuarios-localidades works!
-  En esta página mostrar:
-  - Un select para seleccionar el departamento
-  - Un select que contiene TODAS las localidades del departamento seleccionado 
-  y las localidades que el usuario tiene asignadas se ven seleccionadas. 
-  - Un botón guardar que agrega las nuevas localidades al usuario y elimina las que se quitaron.
+  usuarios-localidades works! En esta página mostrar: - Un select para
+  seleccionar el departamento - Un select que contiene TODAS las localidades del
+  departamento seleccionado y las localidades que el usuario tiene asignadas se
+  ven seleccionadas. - Un botón guardar que agrega las nuevas localidades al
+  usuario y elimina las que se quitaron.
 </p>
+
+<ion-button (click)="this.reload()">Refrescar</ion-button>
+<ion-list>
+  <ion-item [button]="true" (click)="this.reload()">
+    <ion-select
+      name="locality"
+      placeholder="Selecciona una"
+      [(ngModel)]="depto"
+    >
+      <div slot="label">
+        Departamentos
+      </div>
+      @if(this.values().length === 0){
+      <ion-select-option disabled="true">No departamentos</ion-select-option>
+      } @for (item of this.values(); track $index) {
+      <ion-select-option>{{item.nombre}}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+</ion-list>

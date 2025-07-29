@@ -1,48 +1,65 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, resource } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  resource,
+  signal,
+} from '@angular/core';
 import { User } from 'src/app/model/user';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { environment } from 'src/environments/environment';
+import {
+  IonButton,
+  IonText,
+  IonList,
+  IonItem,
+  IonSelectOption,
+  IonSelect,
+} from '@ionic/angular/standalone';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-usuarios-listado',
   templateUrl: './usuarios-listado.page.html',
   styleUrls: ['./usuarios-listado.page.scss'],
-  imports : [JsonPipe],
+  imports: [
+    IonButton,
+    IonText,
+  ],
 })
-export class UsuariosListadoPage  implements OnInit, OnDestroy {
-
+export class UsuariosListadoPage implements OnInit, OnDestroy {
   private usuarioService = inject(UsuariosService);
-  private socket?:WebSocket;
+  private socket?: WebSocket;
+  public values = signal<any[]>([]);
+  private router = inject(Router);
 
   public usuariosSignal = resource({
-    loader : () => this.usuarioService.getAll()
+    loader: async () => await this.usuarioService.getAll(),
   });
 
-  constructor() { }
-  
+  constructor() {}
+
+  reload() {
+    this.usuariosSignal.reload();
+    const valuesArray = Object.values(this.usuariosSignal.value()!);
+    this.values.set(valuesArray);
+  }
+
+  goToUsuariosLocalidades() {
+    this.router.navigate(['protegida', 'usuarios', 'usuarios-localidades']);
+  }
+
+  goToLocalidadesList() {
+    this.router.navigate(['protegida', 'usuarios', 'localidades-list']);
+  }
 
   async ngOnInit() {
-    this.socket = new WebSocket(environment.apiUrl);
-    this.socket.onopen = () => {
-      console.log("Socket conectados.");
-    }
-    this.socket.onmessage = (event:MessageEvent) => {
-      const cadena = event.data.toString();
-      try {
-        const nuevoUsuarioCreado:User = JSON.parse(cadena).data;
-        console.log({nuevoUsuarioCreado});
-        const actuales = this.usuariosSignal.value();
-        if (!actuales) return;
-        this.usuariosSignal.set([...actuales,nuevoUsuarioCreado])
-      }catch(error:any){
-        console.error("No se puede parsear la cadena: ", cadena);
-      }
-    }
+    
   }
 
   ngOnDestroy(): void {
     this.socket?.close();
   }
-
 }

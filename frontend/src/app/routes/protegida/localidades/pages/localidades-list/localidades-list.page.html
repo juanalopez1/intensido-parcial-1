@@ -1,8 +1,43 @@
 <p>
-En esta página mostrar:
-- Un select para seleccionar el departamento
-- Un listado de localidades supervisadas en el departamento
-- El listado anterior debe contener:
--- Departamento, Localidad nombre del usuario.
-
+  En esta página mostrar: - Un select para seleccionar el departamento - Un
+  listado de localidades supervisadas en el departamento - El listado anterior
+  debe contener: -- Departamento, Localidad nombre del usuario.
 </p>
+
+<ion-list>
+  <ion-item [button]="true" (click)="this.reload()">
+    <ion-select
+      name="depto"
+      placeholder="Selecciona uno"
+      [(ngModel)]="depto"
+    >
+      <div slot="label">Departamentos</div>
+      @if(this.values().length === 0){
+      <ion-select-option disabled="true">No departamentos</ion-select-option>
+      } @for (item of this.values(); track $index) {
+      <ion-select-option>{{item.nombre}}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+</ion-list>
+
+<ion-list>
+  <ion-item [button]="true" (click)="this.reload2()">
+    <ion-select
+      name="locality"
+      placeholder="Selecciona una"
+      [(ngModel)]="locality"
+    >
+      <div slot="label">
+        Localidad
+      </div>
+      @if(this.values2().length === 0){
+      <ion-select-option disabled="true"
+        >Departamento sin localidades</ion-select-option
+      >
+      } @for (item of this.values2(); track $index) {
+      <ion-select-option>{{item.nombre}}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+</ion-list>

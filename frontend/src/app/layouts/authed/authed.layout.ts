@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonMenu, IonToolbar, IonHeader, IonTitle, IonContent, IonMenuToggle, IonButton, IonButtons, IonMenuButton, IonRouterOutlet} from "@ionic/angular/standalone";
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-authed',
@@ -10,6 +11,7 @@ import { IonMenu, IonToolbar, IonHeader, IonTitle, IonContent, IonMenuToggle, Io
 })
 export class AuthedLayout  implements OnInit {
 
+  public authService = inject(AuthService);
   constructor() { }
 
   ngOnInit() {

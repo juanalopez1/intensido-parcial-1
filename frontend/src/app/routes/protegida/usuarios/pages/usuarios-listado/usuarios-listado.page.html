@@ -1,8 +1,18 @@
+<ion-button (click)="this.reload()">Toca para ver los usuarios</ion-button>
 <p>
-  @if (this.usuariosSignal.hasValue()) {
-    {{ this.usuariosSignal.value() | json }}
-  }
-  @else {
-    No hay usuarios
-  }
+  @if (this.values()) { @for (user of this.values(); track $index) {
+  <ion-text> ID del usuario: {{user.id_usuario}} </ion-text>
+  <br />
+  <ion-text> Nombre: {{user.nombre}} </ion-text>
+  <br />
+  <ion-text> Roles: {{user.roles}} </ion-text>
+  <br />
+
+  } } @else { No hay usuarios }
 </p>
+<ion-button (click)="this.goToLocalidadesList()"
+  >ir a localidades list</ion-button
+>
+<ion-button (click)="this.goToUsuariosLocalidades()"
+  >ir a usuarios localidades</ion-button
+>
